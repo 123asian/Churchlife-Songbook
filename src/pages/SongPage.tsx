@@ -1,18 +1,19 @@
 import { IonIcon, IonContent, IonPage, IonHeader, IonFab, IonFabButton } from "@ionic/react";
 import { SongViewMode } from "../utils/SongUtils";
-import { isBrowser } from "../utils/PlatformUtils";
+import { isDesktop } from "../utils/PlatformUtils";
 import LyricView from "../components/LyricView";
 import MusicView from "../components/MusicView";
 import NavigationBar from "../components/NavigationBar";
 import React, { useEffect, useState } from "react";
 import { useParams, useHistory } from "react-router-dom";
 import { arrowBackCircleOutline, arrowForwardCircleOutline } from "ionicons/icons";
+
 // Import Event tracking
 import { Event } from "../tracking/GoogleAnalytics";
 import { getNumSongsForBookId } from "../service/SongsService";
 // Import utils
 import { doElementsOverlap } from "../utils/UiUtils";
-
+import { createSwipeGesture } from "../utils/UiUtils";
 /**
  * Song Page Component.
  *
@@ -22,9 +23,13 @@ import { doElementsOverlap } from "../utils/UiUtils";
 const SongPage: React.FC = () => {
   const { bookId, songId } = useParams<{ bookId: string; songId: string }>();
   const history = useHistory();
+  // music page url
+  const [musicPageUrl, setMusicPageUrl] = useState<string>("");
   // when in song view, use music view or lyrics view
   const [songViewMode, setSongViewMode] = useState<SongViewMode>(SongViewMode.Lyrics);
   const [songBookLength, setSongBookLength] = useState<number>(0);
+  // current song id converted to number
+  const currSongId: number = +songId;
 
   useEffect(() => {
     getNumSongsForBookId(bookId).then((size) => setSongBookLength(size));
@@ -34,6 +39,11 @@ const SongPage: React.FC = () => {
       window.removeEventListener("resize", ToggleNavButtonListeners);
     };
   }, [bookId]);
+
+  // mount/remounts the swipe gesture everytime songId/songBookLength changes
+  useEffect(() => {
+    createSwipeGesture(currSongId, songBookLength, navigateToPrevSong, navigateToNextSong);
+  }, [songId, songBookLength]);
 
   useEffect(() => {
     // want to give it enough time before running the button hiding/showing function
@@ -49,21 +59,24 @@ const SongPage: React.FC = () => {
             history.push(`/${bookId}`);
           }}
           toggleSongModeOnClick={ToggleSongMode}
+          songViewMode={songViewMode}
+          musicPageUrl={musicPageUrl}
+          songDownloadName={`${bookId}_${songId}`}
         />
       </IonHeader>
 
-      <IonContent>
+      <IonContent id="song-page-body">
         {/* TODO: Add error handling in case of non number song Id */}
-        {isBrowser() && RenderPrevButton(+songId)}
-        {RenderSong(+songId)}
-        {isBrowser() && RenderNextButton(+songId)}
+        {isDesktop() && RenderPrevButton(currSongId)}
+        {RenderSong(currSongId)}
+        {isDesktop() && RenderNextButton(currSongId)}
       </IonContent>
     </IonPage>
   );
 
   function RenderSong(songNumber: number) {
     if (songViewMode === SongViewMode.Music) {
-      return <MusicView songNumber={songNumber} />;
+      return <MusicView songNumber={songNumber} setMusicPageUrl={setMusicPageUrl} />;
     } else {
       return <LyricView songNumber={songNumber} />;
     }
@@ -86,12 +99,7 @@ const SongPage: React.FC = () => {
     if (songNumber > 1) {
       return (
         <IonFab id="prevButton" vertical="center" horizontal="start" slot="fixed">
-          <IonFabButton
-            color="medium"
-            onClick={() => {
-              history.push(`/${bookId}/${Math.min(songNumber - 1, songBookLength)}`);
-            }}
-          >
+          <IonFabButton color="medium" onClick={navigateToPrevSong}>
             <IonIcon class="pageTurnButton" icon={arrowBackCircleOutline} />
           </IonFabButton>
         </IonFab>
@@ -103,12 +111,7 @@ const SongPage: React.FC = () => {
     if (songNumber < songBookLength) {
       return (
         <IonFab id="nextButton" vertical="center" horizontal="end" slot="fixed">
-          <IonFabButton
-            color="medium"
-            onClick={() => {
-              history.push(`/${bookId}/${Math.max(songNumber + 1, 1)}`);
-            }}
-          >
+          <IonFabButton color="medium" onClick={navigateToNextSong}>
             <IonIcon class="pageTurnButton" icon={arrowForwardCircleOutline} />
           </IonFabButton>
         </IonFab>
@@ -131,6 +134,14 @@ const SongPage: React.FC = () => {
         ? "hidden"
         : "visible";
     }
+  }
+
+  function navigateToNextSong() {
+    history.push(`/${bookId}/${Math.max(currSongId + 1, 1)}`);
+  }
+
+  function navigateToPrevSong() {
+    history.push(`/${bookId}/${Math.min(currSongId - 1, songBookLength)}`);
   }
 };
 
