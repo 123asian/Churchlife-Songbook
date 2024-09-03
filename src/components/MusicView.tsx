@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import "./Components.css";
 import { getSongbookById, makeThreeDigits, Songbook, SongViewMode } from "../utils/SongUtils";
 import { IonToggle } from "@ionic/react";
-import { isBrowser } from "../utils/PlatformUtils";
+import { isDesktop } from "../utils/PlatformUtils";
 //Import Event tracking
 import { triggerSongView } from "../tracking/EventFunctions";
 import { useParams } from "react-router";
@@ -15,13 +15,14 @@ const songsWithTwoTunes = [156, 216, 278, 478];
 // Props are kind of like the parameters for the constructor of this class.
 interface MusicViewProps {
   songNumber: number;
+  setMusicPageUrl: Dispatch<SetStateAction<string>>;
 }
 
 /**
  * Song Viewer React Functional Component.
  */
 const MusicView: React.FC<MusicViewProps> = (props: MusicViewProps) => {
-  const widthPixels = isBrowser() ? window.innerWidth / 2 : window.innerWidth;
+  const widthPixels = isDesktop() ? window.innerWidth / 2 : window.innerWidth;
   const [secondTune, setSecondTune] = useState<boolean>(false);
   const [width, setWidth] = useState<number>(widthPixels);
   const [zoomed, setZoomed] = useState<boolean>(false);
@@ -33,6 +34,9 @@ const MusicView: React.FC<MusicViewProps> = (props: MusicViewProps) => {
   const secondTuneSuffix = songHasTwoTunes && secondTune ? "-B" : "";
 
   const url = songbook?.musicUrl + makeThreeDigits(props.songNumber) + secondTuneSuffix + imageSuffix;
+  useEffect(() => {
+    props.setMusicPageUrl(url);
+  });
 
   useEffect(() => {
     triggerSongView(props.songNumber, SongViewMode.Music);
