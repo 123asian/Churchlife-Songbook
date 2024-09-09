@@ -63,8 +63,10 @@ jobs:
         uses: actions/setup-node@v4
 
       - name: Install Node.js dependencies
-        run: npm i react-scripts@latest
-        run: npm install
+        run: |
+          npm "i react-scripts@latest"
+          npm "install"
+
 
       - name: Build
         run: npm run build
