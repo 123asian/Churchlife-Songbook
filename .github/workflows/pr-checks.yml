@@ -65,6 +65,7 @@ jobs:
       - name: Install Node.js dependencies
         run: |
           npm i react-scripts@latest
+          npm install @capacitor/core@latest @capacitor/cli@latest
           npm install
 
 
