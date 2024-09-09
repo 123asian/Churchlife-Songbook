@@ -64,6 +64,7 @@ jobs:
 
       - name: Install Node.js dependencies
         run: npm install
+        run: npm i react-scripts@latest
 
       - name: Build
         run: npm run build
