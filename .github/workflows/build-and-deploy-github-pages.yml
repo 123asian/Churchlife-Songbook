@@ -1,7 +1,7 @@
 name: Build and Deploy GitHub Pages
 
 on:
-  pull_request:
+  push:
     branches:
       - master
 
@@ -9,16 +9,29 @@ jobs:
   build-and-deploy:
     name: Build and Deploy
     runs-on: ubuntu-latest
+
     steps:
+      - name: Setup kernel for react native, increase watchers
+        run: echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
+
       - name: Checkout 🛎️
         uses: actions/checkout@v4
         with:
-          persist-credentials: false
+          ref: ${{ github.head_ref }}
 
-      - name: Install and Build 🔧
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '16'
+      
+      - name: Install Node.js dependencies
         run: |
-          npm install
-          npm run build
+          # npm i react-scripts@latest
+          # npm install @capacitor/core@latest @capacitor/cli@latest
+          npm install -force
+      
+      - name: Build 🔧
+        run: npm run build
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@3.7.1
