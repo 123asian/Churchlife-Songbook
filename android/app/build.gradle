@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
+    namespace "church.life.apps.songs"
     compileSdkVersion 33
     defaultConfig {
         applicationId "church.life.apps.songs"
