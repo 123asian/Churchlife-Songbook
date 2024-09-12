@@ -34,7 +34,7 @@ jobs:
         run: npm run build
 
       - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@3.7.1
+        uses: JamesIves/github-pages-deploy-action@v4.6.4
         with:
           REPOSITORY_NAME: Church-Life-Apps/Church-Life-Apps.github.io
           ACCESS_TOKEN: ${{ secrets.DEPLOY_WEBAPP_TOKEN }}
