@@ -1,5 +1,4 @@
 import puppeteer, { Browser, Page } from "puppeteer";
-import { exception } from "console";
 
 const baseUrl = "http://localhost:8080";
 const selectors = {
@@ -41,7 +40,7 @@ describe("App", () => {
   it("renders without crashing", async () => {
     await page.waitForSelector(selectors.appName);
 
-    const html = await page.$eval(selectors.appName, (e) => e.innerHTML);
+    const html = await page.$eval(selectors.appName, e => e.innerHTML);
     expect(html).toBeTruthy();
   });
 
@@ -93,7 +92,7 @@ describe("App", () => {
   it("searching terms not found displays no results", async () => {
     await verifySearchResults(page, "zxcvzxv", []);
 
-    expect(await page.$eval(selectors.noResultsFoundLabel, (e) => e.innerHTML)).toEqual("No results found");
+    expect(await page.$eval(selectors.noResultsFoundLabel, e => e.innerHTML)).toEqual("No results found");
   });
 
   it("selecting song displays song page music view", async () => {
@@ -118,7 +117,7 @@ describe("App", () => {
     await navigation;
 
     expect(page.url()).toEqual(getSongLink(6));
-    const musicViewSrc = await page.$eval(selectors.musicView, (e) => e.getAttribute("src"));
+    const musicViewSrc = await page.$eval(selectors.musicView, e => e.getAttribute("src"));
     expect(musicViewSrc).toEqual(
       "https://raw.githubusercontent.com/Church-Life-Apps/Resources/master/resources/images/shl/SHL_006.png"
     );
@@ -137,7 +136,7 @@ describe("App", () => {
 
     await page.waitForSelector(selectors.lyricViewIonCardTitle);
 
-    const cardTitle = await page.$eval(selectors.lyricViewIonCardTitle, (e) => e.innerHTML);
+    const cardTitle = await page.$eval(selectors.lyricViewIonCardTitle, e => e.innerHTML);
     expect(cardTitle).toEqual("Come, Thou Almighty King");
 
     const lyricLines = await page.$$(selectors.lyricLine);
@@ -149,16 +148,16 @@ describe("App", () => {
 
     await page.waitForSelector(selectors.lyricViewIonCardTitle);
 
-    const cardTitle = await page.$eval(selectors.lyricViewIonCardTitle, (e) => e.innerHTML);
+    const cardTitle = await page.$eval(selectors.lyricViewIonCardTitle, e => e.innerHTML);
     expect(cardTitle).toEqual("Blessed Be Your Name");
 
     const lyricVerseNames = await page.$$(selectors.lyricVerseName);
     expect(lyricVerseNames.length).toEqual(10);
 
-    expect(await lyricVerseNames[2].evaluate((e) => e.innerHTML)).toEqual("Chorus 1");
-    expect(await lyricVerseNames[3].evaluate((e) => e.innerHTML)).toEqual("Chorus 2");
-    expect(await lyricVerseNames[5].evaluate((e) => e.innerHTML)).toEqual("Verse 4");
-    expect(await lyricVerseNames[8].evaluate((e) => e.innerHTML)).toEqual("Bridge 1");
+    expect(await lyricVerseNames[2].evaluate(e => e.innerHTML)).toEqual("Chorus 1");
+    expect(await lyricVerseNames[3].evaluate(e => e.innerHTML)).toEqual("Chorus 2");
+    expect(await lyricVerseNames[5].evaluate(e => e.innerHTML)).toEqual("Verse 4");
+    expect(await lyricVerseNames[8].evaluate(e => e.innerHTML)).toEqual("Bridge 1");
   });
 
   it("lyrics view displays lyrics based on presentation order - song 44", async () => {
@@ -166,14 +165,14 @@ describe("App", () => {
 
     await page.waitForSelector(selectors.lyricViewIonCardTitle);
 
-    const cardTitle = await page.$eval(selectors.lyricViewIonCardTitle, (e) => e.innerHTML);
+    const cardTitle = await page.$eval(selectors.lyricViewIonCardTitle, e => e.innerHTML);
     expect(cardTitle).toEqual("The Name Of Jesus");
 
     const lyricVerseNames = await page.$$(selectors.lyricVerseName);
     expect(lyricVerseNames.length).toEqual(8);
 
-    expect(await lyricVerseNames[1].evaluate((e) => e.innerHTML)).toEqual("Chorus 1");
-    expect(await lyricVerseNames[5].evaluate((e) => e.innerHTML)).toEqual("Chorus 1");
+    expect(await lyricVerseNames[1].evaluate(e => e.innerHTML)).toEqual("Chorus 1");
+    expect(await lyricVerseNames[5].evaluate(e => e.innerHTML)).toEqual("Chorus 1");
   });
 
   it("displays song list and loads all songs on scroll", async () => {
@@ -221,13 +220,13 @@ describe("App", () => {
     await page.waitForSelector(selectors.lyricViewIonCardTitle);
 
     expect(page.url()).toEqual(getSongLink(6));
-    expect(await page.$eval(selectors.lyricViewIonCardTitle, (e) => e.innerHTML)).toEqual("Come, Thou Almighty King");
+    expect(await page.$eval(selectors.lyricViewIonCardTitle, e => e.innerHTML)).toEqual("Come, Thou Almighty King");
 
     await page.waitForSelector(selectors.nextButton);
     await page.click(selectors.nextButton);
 
     expect(page.url()).toEqual(getSongLink(7));
-    expect(await page.$eval(selectors.lyricViewIonCardTitle, (e) => e.innerHTML)).toEqual(
+    expect(await page.$eval(selectors.lyricViewIonCardTitle, e => e.innerHTML)).toEqual(
       "God, Our Father, We Adore Thee!"
     );
 
@@ -235,7 +234,7 @@ describe("App", () => {
     await page.click(selectors.prevButton);
 
     expect(page.url()).toEqual(getSongLink(6));
-    expect(await page.$eval(selectors.lyricViewIonCardTitle, (e) => e.innerHTML)).toEqual("Come, Thou Almighty King");
+    expect(await page.$eval(selectors.lyricViewIonCardTitle, e => e.innerHTML)).toEqual("Come, Thou Almighty King");
   });
 
   it("buttons invisible but should still be in dom", async () => {
@@ -274,7 +273,7 @@ describe("App", () => {
     await page.waitForSelector(selectors.musicView);
 
     expect(page.url()).toEqual(getSongLink(6));
-    expect(await page.$eval(selectors.musicView, (e) => e.getAttribute("src"))).toEqual(
+    expect(await page.$eval(selectors.musicView, e => e.getAttribute("src"))).toEqual(
       "https://raw.githubusercontent.com/Church-Life-Apps/Resources/master/resources/images/shl/SHL_006.png"
     );
 
@@ -282,7 +281,7 @@ describe("App", () => {
     await page.click(selectors.nextButton);
 
     expect(page.url()).toEqual(getSongLink(7));
-    expect(await page.$eval(selectors.musicView, (e) => e.getAttribute("src"))).toEqual(
+    expect(await page.$eval(selectors.musicView, e => e.getAttribute("src"))).toEqual(
       "https://raw.githubusercontent.com/Church-Life-Apps/Resources/master/resources/images/shl/SHL_007.png"
     );
 
@@ -290,7 +289,7 @@ describe("App", () => {
     await page.click(selectors.prevButton);
 
     expect(page.url()).toEqual(getSongLink(6));
-    expect(await page.$eval(selectors.musicView, (e) => e.getAttribute("src"))).toEqual(
+    expect(await page.$eval(selectors.musicView, e => e.getAttribute("src"))).toEqual(
       "https://raw.githubusercontent.com/Church-Life-Apps/Resources/master/resources/images/shl/SHL_006.png"
     );
   }, 20000);
@@ -345,7 +344,7 @@ describe("App", () => {
     await page.click(selectors.songViewToggler);
 
     await page.waitForSelector(selectors.downloadMusicButton);
-    const downloadButtonLink = await page.$eval(selectors.downloadMusicButton, (e) => e.getAttribute("download"));
+    const downloadButtonLink = await page.$eval(selectors.downloadMusicButton, e => e.getAttribute("download"));
     expect(downloadButtonLink).toEqual("shl_6");
   });
 
@@ -368,9 +367,10 @@ async function verifySearchResults(page: Page, searchTerm: string, songResults: 
     await page.click(selectors.shlSongbook);
   }
 
-  if (songResults !== null && songResults.length >= 20) {
-    throw exception("verifySearchResults only works if songResults < 20 items.");
+  if (songResults !== null) {
+    expect(songResults.length).toBeLessThan(20);
   }
+
   await page.waitForSelector(selectors.searchBar);
 
   await page.waitForSelector(selectors.searchViewIonCard);
@@ -388,11 +388,11 @@ async function verifySearchResults(page: Page, searchTerm: string, songResults: 
   }
   if (strict) {
     for (let i = 0; i < ionCards.length; i++) {
-      expect(await ionCards[i].evaluate((e) => e.innerHTML)).toEqual(songResults[i]);
+      expect(await ionCards[i].evaluate(e => e.innerHTML)).toEqual(songResults[i]);
     }
   } else {
     for (let i = 0; i < songResults.length; i++) {
-      expect(await ionCards[i].evaluate((e) => e.innerHTML)).toEqual(songResults[i]);
+      expect(await ionCards[i].evaluate(e => e.innerHTML)).toEqual(songResults[i]);
     }
   }
 }

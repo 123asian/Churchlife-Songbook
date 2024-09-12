@@ -101,7 +101,7 @@ jobs:
           node-version: '16'
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v1
+        uses: android-actions/setup-android@v3.2.1
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
 

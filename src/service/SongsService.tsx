@@ -26,13 +26,13 @@ async function getOrfetchSongs(bookId: string): Promise<Song[]> {
       return [];
     }
     return fetch(songbook.lyricsUrl)
-      .then(async (response) => {
+      .then(async response => {
         const body = await response.json();
         const songsForBook = body[songbook.name];
         songs.set(bookId, songsForBook);
         return songsForBook;
       })
-      .catch((e) => {
+      .catch(e => {
         console.error(`Failed to fetch song lyrics due to ${e}`);
         return [];
       });
@@ -73,18 +73,18 @@ export async function listSongs(searchString: string, bookId: string): Promise<S
   if (searchString === "") {
     return songs;
   } else if (isNumeric(searchString)) {
-    return songs.filter((song) => song.songNumber.toString().startsWith(searchString));
+    return songs.filter(song => song.songNumber.toString().startsWith(searchString));
   } else {
     // Build a cache to speed up duplicate calls
     const matchScores: Map<number, number> = new Map<number, number>();
-    songs.forEach((song) => {
+    songs.forEach(song => {
       matchScores.set(song.songNumber, getMatchScore(song, searchString));
     });
 
-    console.log(matchScores);
+    console.debug(matchScores);
 
     return songs
-      .filter((song) => (matchScores.get(song.songNumber) as number) > 0)
+      .filter(song => (matchScores.get(song.songNumber) as number) > 0)
       .sort(
         (song1, song2) => (matchScores.get(song2.songNumber) as number) - (matchScores.get(song1.songNumber) as number)
       );
@@ -164,7 +164,7 @@ function getMatchScore(song: Song, searchString: string): number {
     normalizedLyrics.set(
       song.songNumber,
       Object.values(song.lyrics)
-        .map((s) => normalize(String(s)))
+        .map(s => normalize(String(s)))
         .join(" ") as string
     );
   }

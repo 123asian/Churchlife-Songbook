@@ -1,10 +1,11 @@
-import { IonContent, IonPage, IonHeader, IonInput, IonItem } from "@ionic/react";
+import { IonContent, IonPage, IonHeader, IonInput, IonItem, IonButton, IonIcon } from "@ionic/react";
 import NavigationBar from "../components/NavigationBar";
 import React, { useEffect, useState } from "react";
 import SearchView from "../components/SearchView";
 import { useHistory, useParams } from "react-router-dom";
 import { Song } from "../utils/SongUtils";
 import { listSongs } from "../service/SongsService";
+import { closeOutline } from "ionicons/icons";
 
 /**
  * Book Page Component.
@@ -21,20 +22,38 @@ const BookPage: React.FC = () => {
   useEffect(() => {
     const timeOutId = setTimeout(() => {
       listSongs(searchString, bookId)
-        .then((songs) => {
+        .then(songs => {
           setSongs(songs);
+          localStorage.setItem("searchString", searchString);
         })
-        .catch((e) => console.error(e));
+        .catch(e => console.error(e));
     }, 200);
     return () => clearTimeout(timeOutId);
   }, [searchString]);
 
   const history = useHistory();
 
+  useEffect(() => {
+    const savedSearchString = localStorage.getItem("searchString");
+    if (savedSearchString) {
+      setSearchString(savedSearchString);
+    }
+  }, []);
+
+  const clearSearchText = () => {
+    localStorage.removeItem("searchString");
+    setSearchString("");
+  };
+
   return (
     <IonPage>
       <IonHeader>
-        <NavigationBar backButtonOnClick={() => history.push("/")} />
+        <NavigationBar
+          backButtonOnClick={() => {
+            history.push("/");
+            clearSearchText();
+          }}
+        />
       </IonHeader>
       <IonItem>
         <IonInput
@@ -42,8 +61,11 @@ const BookPage: React.FC = () => {
           type="search"
           value={searchString}
           placeholder="Search for a song"
-          onIonChange={(word) => setSearchString(word.detail.value as string)}
+          onIonChange={word => setSearchString(word.detail.value as string)}
         ></IonInput>
+        <IonButton shape="round" fill="clear" color="medium" onClick={() => clearSearchText()}>
+          <IonIcon icon={closeOutline}></IonIcon>
+        </IonButton>
       </IonItem>
       {/* The key here will trigger a re-initialization of a new searchView when it changes. */}
       <IonContent>
