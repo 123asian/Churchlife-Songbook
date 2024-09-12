@@ -104,7 +104,7 @@ jobs:
         uses: android-actions/setup-android@v2
 
       - name: Install Capacitor
-        run: npm install -g @capacitor/core @capacitor/cli
+        run: npm install -g @capacitor/core @capacitor/cli@latest-4
 
       - name: Install Ionic
         run: npm install -g @ionic/cli@6.20.1
