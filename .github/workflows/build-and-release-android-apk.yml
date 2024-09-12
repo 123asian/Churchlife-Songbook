@@ -1,7 +1,7 @@
 name: Build and Release	Android Debug APK
 
 on:
-  push:
+  pull_request:
     branches:
       - master
 
@@ -14,23 +14,26 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Setup java
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
-          java-version: 1.8
+          distribution: 'temurin'
+          java-version: '17'
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 13.x
+          node-version: '16'
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v2
+        uses: android-actions/setup-android@v3.2.1
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
 
       - name: Install Capacitor
-        run: npm install -g @capacitor/core @capacitor/cli
+        run: npm install -g @capacitor/core @capacitor/cli@latest-4
 
       - name: Install Ionic
-        run: npm install -g @ionic/cli
+        run: npm install -g @ionic/cli@6.20.1
 
       - name: Install app dependencies
         run: npm install
@@ -47,7 +50,7 @@ jobs:
         run: ./gradlew --no-daemon assembleDebug --info
 
       - name: Upload APK as artifact # This redundantly uploads the apk on the github action.
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: hymnal-app-debug
           path: android/app/build/outputs/apk/debug/app-debug.apk
