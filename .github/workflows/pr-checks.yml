@@ -101,7 +101,9 @@ jobs:
           node-version: '16'
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v2
+        uses: android-actions/setup-android@v1
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
 
       - name: Install Capacitor
         run: npm install -g @capacitor/core @capacitor/cli@latest-4
@@ -124,7 +126,7 @@ jobs:
         run: ./gradlew --no-daemon assembleDebug --info
 
       - name: Upload APK as artifact
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: hymnal-app-debug
           path: android/app/build/outputs/apk/debug/app-debug.apk
