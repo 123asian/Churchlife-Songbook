@@ -1,4 +1,4 @@
-import { IonButton, IonTitle, IonToolbar, IonButtons, IonModal, IonIcon } from "@ionic/react";
+import { IonButton, IonToolbar, IonButtons, IonModal, IonIcon, IonText } from "@ionic/react";
 import "./Components.css";
 import {
   documentTextOutline,
@@ -27,7 +27,7 @@ export const defaultNavigationTitle = "Choose a Songbook!";
 /**
  * Navigation Bar Component
  */
-const NavigationBar: React.FC<NavigationBarProps> = (props) => {
+const NavigationBar: React.FC<NavigationBarProps> = props => {
   // whether or not to show settings modal
   const [showSettingsModal, setShowSettingsModal] = useState<boolean>(false);
   const [songbookName, setSongbookName] = useState<string>(defaultNavigationTitle);
@@ -35,7 +35,7 @@ const NavigationBar: React.FC<NavigationBarProps> = (props) => {
   const [songPageBlobUrl, setSongPageBlobUrl] = useState<string>("");
 
   useEffect(() => {
-    getSongbookById(bookId).then((book) => {
+    getSongbookById(bookId).then(book => {
       if (book) {
         setSongbookName(book.name);
       }
@@ -47,28 +47,43 @@ const NavigationBar: React.FC<NavigationBarProps> = (props) => {
   // create a blob url and we then use that blob url when we render the download button
   useEffect(() => {
     fetch(props.musicPageUrl as string)
-      .then((response) => response.blob())
-      .then((blob) => {
+      .then(response => response.blob())
+      .then(blob => {
         const blobUrl = URL.createObjectURL(blob);
         if (songPageBlobUrl !== blobUrl) {
           setSongPageBlobUrl(blobUrl);
         }
       })
-      .catch((e) => console.error(e));
+      .catch(e => console.error(e));
   }, [props.musicPageUrl]);
 
   return (
-    <IonToolbar>
-      <IonTitle id="appName">{songbookName}</IonTitle>
+    <IonToolbar style={{}}>
       <IonButtons slot="start">{RenderBackButton()}</IonButtons>
-      <IonButtons slot="primary">
-        {RenderToggleSongModeButton()}
+      <IonText
+        style={{
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          width: "100%",
+          textOverflow: "ellipsis",
+          display: "block",
+          fontSize: "20px",
+          marginLeft: "4px",
+          fontWeight: "bold",
+        }}
+        id="appName"
+      >
+        {`${songbookName}`}
+      </IonText>
+      <IonButtons slot="end">
         {(isDesktop() || isMobileWeb()) &&
           props.songViewMode === SongViewMode.Music &&
           RenderDownloadSheetMusicButton()}
+        {RenderToggleSongModeButton()}
+
         {/* TODO: Put this Image/Lyric mode button into settings page.
           This might require some react magic to get state from a child component */}
-        <IonButton onClick={() => setShowSettingsModal(true)}>
+        <IonButton slot="end" onClick={() => setShowSettingsModal(true)}>
           <IonIcon icon={settingsOutline} />
         </IonButton>
       </IonButtons>
@@ -101,7 +116,7 @@ const NavigationBar: React.FC<NavigationBarProps> = (props) => {
     }
 
     return (
-      <IonButton id="songViewToggler" onClick={props.toggleSongModeOnClick}>
+      <IonButton slot="end" id="songViewToggler" onClick={props.toggleSongModeOnClick}>
         <IonIcon icon={musicalNotesOutline} />
         <IonIcon icon={swapHorizontalOutline} />
         <IonIcon icon={documentTextOutline} />
@@ -111,7 +126,7 @@ const NavigationBar: React.FC<NavigationBarProps> = (props) => {
 
   function RenderDownloadSheetMusicButton() {
     return (
-      <IonButton id="music-download-button" download={props.songDownloadName} href={songPageBlobUrl}>
+      <IonButton slot="end" id="music-download-button" download={props.songDownloadName} href={songPageBlobUrl}>
         <IonIcon icon={downloadOutline} />
       </IonButton>
     );

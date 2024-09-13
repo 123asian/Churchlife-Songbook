@@ -77,11 +77,12 @@ const SearchView: React.FC<SearchViewProps> = (props: SearchViewProps) => {
           history.push(`/${bookId}/${song.songNumber}`);
         }}
         className="hymnalListView"
+        style={{ padding: "10px", margin: "6px" }}
       >
-        <IonCardTitle>
+        <IonCardTitle style={{ fontSize: "20px" }}>
           {song.songNumber}. {song.title}
         </IonCardTitle>
-        <IonCardSubtitle>{song.author}</IonCardSubtitle>
+        <IonCardSubtitle style={{ fontSize: "14px" }}>{song.author}</IonCardSubtitle>
       </IonCard>
     );
   }

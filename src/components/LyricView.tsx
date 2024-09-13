@@ -30,7 +30,7 @@ const LyricView: React.FC<LyricViewProps> = (props: LyricViewProps) => {
 
   useEffect(() => {
     triggerSongView(props.songNumber, SongViewMode.Lyrics);
-    getSong(props.songNumber, bookId).then((song) => {
+    getSong(props.songNumber, bookId).then(song => {
       setSong(song);
     });
   }, [songId]);
@@ -41,7 +41,7 @@ const LyricView: React.FC<LyricViewProps> = (props: LyricViewProps) => {
         <IonCol size="12" size-lg="8" size-xl="6" className="song-page-center">
           <IonCard id="lyricViewCard" className="ion-padding">
             <IonCardHeader className="ion-text-center">
-              <IonCardTitle key="title">{song?.title}</IonCardTitle>
+              <IonCardTitle key="title">{`${song?.songNumber}) ${song?.title}`}</IonCardTitle>
               <IonCardSubtitle key="author">By {song?.author}</IonCardSubtitle>
             </IonCardHeader>
             <IonCardContent key="lyrics">{song ? getLyrics(song) : song}</IonCardContent>
@@ -64,7 +64,7 @@ const LyricView: React.FC<LyricViewProps> = (props: LyricViewProps) => {
     // if the song has a presentation order defined, use it;
     // otherwise, present in written order
     if (presentationOrder != null) {
-      presentationOrder.forEach((verseNumber) => {
+      presentationOrder.forEach(verseNumber => {
         const verseName: string = getVerseText(verseNumber);
         const verseLyrics: string[] = songLyrics.get(verseNumber) || [""];
 
