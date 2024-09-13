@@ -63,9 +63,11 @@ const BookPage: React.FC = () => {
           placeholder="Search for a song"
           onIonChange={word => setSearchString(word.detail.value as string)}
         ></IonInput>
-        <IonButton shape="round" fill="clear" color="medium" onClick={() => clearSearchText()}>
-          <IonIcon icon={closeOutline}></IonIcon>
-        </IonButton>
+        {searchString !== "" && (
+          <IonButton shape="round" fill="clear" color="medium" onClick={() => clearSearchText()}>
+            <IonIcon icon={closeOutline}></IonIcon>
+          </IonButton>
+        )}
       </IonItem>
       {/* The key here will trigger a re-initialization of a new searchView when it changes. */}
       <IonContent>
