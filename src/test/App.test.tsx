@@ -137,7 +137,7 @@ describe("App", () => {
     await page.waitForSelector(selectors.lyricViewIonCardTitle);
 
     const cardTitle = await page.$eval(selectors.lyricViewIonCardTitle, e => e.innerHTML);
-    expect(cardTitle).toEqual("Come, Thou Almighty King");
+    expect(cardTitle).toEqual("6) Come, Thou Almighty King");
 
     const lyricLines = await page.$$(selectors.lyricLine);
     expect(lyricLines.length).toEqual(27);
@@ -149,7 +149,7 @@ describe("App", () => {
     await page.waitForSelector(selectors.lyricViewIonCardTitle);
 
     const cardTitle = await page.$eval(selectors.lyricViewIonCardTitle, e => e.innerHTML);
-    expect(cardTitle).toEqual("Blessed Be Your Name");
+    expect(cardTitle).toEqual("42) Blessed Be Your Name");
 
     const lyricVerseNames = await page.$$(selectors.lyricVerseName);
     expect(lyricVerseNames.length).toEqual(10);
@@ -166,7 +166,7 @@ describe("App", () => {
     await page.waitForSelector(selectors.lyricViewIonCardTitle);
 
     const cardTitle = await page.$eval(selectors.lyricViewIonCardTitle, e => e.innerHTML);
-    expect(cardTitle).toEqual("The Name Of Jesus");
+    expect(cardTitle).toEqual("44) The Name Of Jesus");
 
     const lyricVerseNames = await page.$$(selectors.lyricVerseName);
     expect(lyricVerseNames.length).toEqual(8);
@@ -220,21 +220,21 @@ describe("App", () => {
     await page.waitForSelector(selectors.lyricViewIonCardTitle);
 
     expect(page.url()).toEqual(getSongLink(6));
-    expect(await page.$eval(selectors.lyricViewIonCardTitle, e => e.innerHTML)).toEqual("Come, Thou Almighty King");
+    expect(await page.$eval(selectors.lyricViewIonCardTitle, e => e.innerHTML)).toEqual("6) Come, Thou Almighty King");
 
     await page.waitForSelector(selectors.nextButton);
     await page.click(selectors.nextButton);
 
     expect(page.url()).toEqual(getSongLink(7));
     expect(await page.$eval(selectors.lyricViewIonCardTitle, e => e.innerHTML)).toEqual(
-      "God, Our Father, We Adore Thee!"
+      "7) God, Our Father, We Adore Thee!"
     );
 
     await page.waitForSelector(selectors.prevButton);
     await page.click(selectors.prevButton);
 
     expect(page.url()).toEqual(getSongLink(6));
-    expect(await page.$eval(selectors.lyricViewIonCardTitle, e => e.innerHTML)).toEqual("Come, Thou Almighty King");
+    expect(await page.$eval(selectors.lyricViewIonCardTitle, e => e.innerHTML)).toEqual("6) Come, Thou Almighty King");
   });
 
   it("buttons invisible but should still be in dom", async () => {
